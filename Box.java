@@ -13,8 +13,4 @@ public class Box {
                 this.dimensions[1] < other.dimensions[1] &&
                 this.dimensions[2] < other.dimensions[2];
     }
-
-    public String toString() {
-        return dimensions[0] + " " + dimensions[1] + " " + dimensions[2];
-    }
 }
