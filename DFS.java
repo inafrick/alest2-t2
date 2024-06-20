@@ -1,31 +1,26 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DFS {
+    private Set<Box> marked;
+    private Map<Box, Box> edgeTo;
+    private Box start;
 
-    private Set<String> marked;
-    private Map<String, String> edgeTo;
-    private String start;
-
-    public DFS(Graph G, String start) {
+    public DFS(Graph G, Box start) {
         this.start = start;
-        marked = new HashSet<String>();
-        edgeTo = new HashMap<String, String>();
+        marked = new HashSet<>();
+        edgeTo = new HashMap<>();
         dfs(G, start);
     }
 
-    boolean hasPathTo(String v) {
+    boolean hasPathTo(Box v) {
         return marked.contains(v);
     }
 
-    Iterable<String> pathTo(String v) {
+    Iterable<Box> pathTo(Box v) {
         if (!hasPathTo(v))
             return null;
-        ArrayList<String> path = new ArrayList<>();
-        String w = v;
+        List<Box> path = new LinkedList<>();
+        Box w = v;
         while (!w.equals(start)) {
             path.add(0, w); // insere no início da lista
             w = edgeTo.get(w);
@@ -34,10 +29,10 @@ public class DFS {
         return path;
     }
 
-    private void dfs(Graph g, String s) {
+    private void dfs(Graph g, Box s) {
         System.out.println("Visitando: " + s);
         marked.add(s);
-        for (String w : g.getAdj(s)) {
+        for (Box w : g.getAdj(s)) {
             if (!marked.contains(w)) {
                 edgeTo.put(w, s);
                 dfs(g, w);
