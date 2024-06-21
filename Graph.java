@@ -1,83 +1,41 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class Graph {
-    protected Map<Box, List<Box>> graph;
-    protected Set<Box> vertices;
-    protected int totalVertices;
-    protected int totalEdges;
+    private List<Box> vertices;
+    private Map<Box, List<Box>> adjList;
 
-    public Graph() {
-        graph = new HashMap<>();
-        vertices = new HashSet<>();
-        totalVertices = totalEdges = 0;
+    public Graph(List<Box> boxes) {
+        vertices = new ArrayList<>(boxes);
+        adjList = new HashMap<>();
+        for (Box box : boxes) {
+            adjList.put(box, new ArrayList<>());
+        }
+        buildGraph();
     }
 
-    public void buildGraph(List<Box> boxes) {
-        Collections.sort(boxes);
-
-        for (Box box : boxes) {
-            if (!vertices.contains(box)) {
-                vertices.add(box);
-                totalVertices++;
-            }
-        }
-
-        for (int i = 0; i < boxes.size(); i++) {
-            Box currentBox = boxes.get(i);
-            for (int j = i + 1; j < boxes.size(); j++) {
-                Box nextBox = boxes.get(j);
+    private void buildGraph() {
+        Collections.sort(vertices);
+        for (int i = 0; i < vertices.size(); i++) {
+            Box currentBox = vertices.get(i);
+            for (int j = i + 1; j < vertices.size(); j++) {
+                Box nextBox = vertices.get(j);
                 if (currentBox.canNest(nextBox)) {
-                    addEdge(currentBox, nextBox);
+                    adjList.get(currentBox).add(nextBox);
                 }
             }
         }
     }
 
-    public void addEdge(Box v, Box w) {
-        addToList(v, w);
-    }
-
-    public Iterable<Box> getAdj(Box v) {
-        List<Box> res = graph.get(v);
-        if (res == null)
-            res = new LinkedList<>();
-        return res;
-    }
-
-    public Set<Box> getVerts() {
-        return vertices;
-    }
-
-    public int getTotalVertices() {
-        return totalVertices;
-    }
-
-    public int getTotalEdges() {
-        return totalEdges;
-    }
-
-    protected List<Box> addToList(Box v, Box w) {
-        List<Box> list = graph.get(v);
-        if (list == null)
-            list = new LinkedList<>();
-        list.add(w);
-        graph.put(v, list);
-        totalEdges++;
-        return list;
-    }
-
     public List<Box> findLongestPath() {
-        List<Box> longestPath = new LinkedList<>();
-        Map<Box, List<Box>> boxList = new HashMap<>();
-        for (Box box : getVerts()) {
-            List<Box> currentPath = findLongestPathFromBox(box, boxList);
+        Map<Box, List<Box>> memo = new HashMap<>();
+        List<Box> longestPath = new ArrayList<>();
+
+        for (Box box : vertices) {
+            List<Box> currentPath = findLongestPathFromBox(box, memo);
             if (currentPath.size() > longestPath.size()) {
                 longestPath = currentPath;
             }
@@ -85,21 +43,24 @@ public class Graph {
         return longestPath;
     }
 
-    private List<Box> findLongestPathFromBox(Box box, Map<Box, List<Box>> boxList) {
-        if (boxList.containsKey(box)) {
-            return boxList.get(box);
+    private List<Box> findLongestPathFromBox(Box box, Map<Box, List<Box>> memo) {
+        if (memo.containsKey(box)) {
+            return memo.get(box);
         }
-        List<Box> longestPath = new LinkedList<>();
-        for (Box neighbor : getAdj(box)) {
-            List<Box> currentPath = findLongestPathFromBox(neighbor, boxList);
+
+        List<Box> longestPath = new ArrayList<>();
+        for (Box neighbor : adjList.get(box)) {
+            List<Box> currentPath = findLongestPathFromBox(neighbor, memo);
             if (currentPath.size() > longestPath.size()) {
                 longestPath = currentPath;
             }
         }
+
         List<Box> result = new ArrayList<>();
         result.add(box);
         result.addAll(longestPath);
-        boxList.put(box, result);
+        memo.put(box, result);
+
         return result;
     }
 }
