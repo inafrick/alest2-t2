@@ -6,20 +6,20 @@ import java.util.List;
 
 public class Reader {
 
-    public List<Box> readBoxes(String filename) {
-        List<Box> boxes = new LinkedList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" ");
-                int dim1 = Integer.parseInt(parts[0]);
-                int dim2 = Integer.parseInt(parts[1]);
-                int dim3 = Integer.parseInt(parts[2]);
-                boxes.add(new Box(dim1, dim2, dim3));
+    public List<Box> lerCaixas(String nomeArquivo) {
+        List<Box> caixas = new LinkedList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(nomeArquivo))) {
+            String linha;
+            while ((linha = br.readLine()) != null) {
+                String[] partes = linha.split(" ");
+                int dim1 = Integer.parseInt(partes[0]);
+                int dim2 = Integer.parseInt(partes[1]);
+                int dim3 = Integer.parseInt(partes[2]);
+                caixas.add(new Box(dim1, dim2, dim3));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return boxes;
+        return caixas;
     }
 }

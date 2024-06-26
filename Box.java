@@ -1,30 +1,30 @@
 import java.util.Arrays;
 
 public class Box implements Comparable<Box> {
-    int[] dimensions;
+    int[] dimensoes;
 
     public Box(int dim1, int dim2, int dim3) {
-        dimensions = new int[] { dim1, dim2, dim3 };
-        Arrays.sort(dimensions);
+        dimensoes = new int[] { dim1, dim2, dim3 };
+        Arrays.sort(dimensoes);
     }
 
-    public boolean canNest(Box other) {
-        return this.dimensions[0] < other.dimensions[0] &&
-                this.dimensions[1] < other.dimensions[1] &&
-                this.dimensions[2] < other.dimensions[2];
+    public boolean podeAninhar(Box outraCaixa) {
+        return this.dimensoes[0] < outraCaixa.dimensoes[0] &&
+                this.dimensoes[1] < outraCaixa.dimensoes[1] &&
+                this.dimensoes[2] < outraCaixa.dimensoes[2];
     }
 
     @Override
-    public int compareTo(Box other) {
+    public int compareTo(Box outraCaixa) {
         for (int i = 0; i < 3; i++) {
-            if (this.dimensions[i] != other.dimensions[i]) {
-                return this.dimensions[i] - other.dimensions[i];
+            if (this.dimensoes[i] != outraCaixa.dimensoes[i]) {
+                return this.dimensoes[i] - outraCaixa.dimensoes[i];
             }
         }
         return 0;
     }
 
     public String toString() {
-        return dimensions[0] + " " + dimensions[1] + " " + dimensions[2];
+        return dimensoes[0] + " " + dimensoes[1] + " " + dimensoes[2];
     }
 }
